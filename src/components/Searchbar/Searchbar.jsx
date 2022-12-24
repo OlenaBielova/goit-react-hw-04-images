@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 import {
   SearchContainer,
   SearchForm,
@@ -10,45 +9,41 @@ import {
 import { FaSearch } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
-export class Searchbar extends Component {
-  state = {
-    query: '',
+export function Searchbar({ onSubmit }) {
+  const [query, setQuery] = useState('');
+
+  const handleChange = e => {
+    setQuery(e.currentTarget.value.toLowerCase());
   };
 
-  handleChange = event => {
-    this.setState({ query: event.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault();
     document.getElementById('searchForm').reset();
 
-    if (this.state.query === '') {
+    if (query === '') {
       alert('Type your search query!');
     } else {
-      this.props.onSubmit(this.state.query);
+      onSubmit(query);
     }
   };
 
-  render() {
-    return (
-      <SearchContainer>
-        <SearchForm id="searchForm" onSubmit={this.handleSubmit}>
-          <SearchButton type="submit">
-            <FaSearch />
-            <Label />
-          </SearchButton>
-          <Input
-            onChange={this.handleChange}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </SearchForm>
-      </SearchContainer>
-    );
-  }
+  return (
+    <SearchContainer>
+      <SearchForm id="searchForm" onSubmit={handleSubmit}>
+        <SearchButton type="submit">
+          <FaSearch />
+          <Label />
+        </SearchButton>
+        <Input
+          onChange={handleChange}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+        />
+      </SearchForm>
+    </SearchContainer>
+  );
 }
 
 Searchbar.propTypes = {

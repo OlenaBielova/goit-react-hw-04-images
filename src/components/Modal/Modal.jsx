@@ -12,6 +12,6 @@ export const Modal = ({ src, alt, onClick }) => (
 
 Modal.propTypes = {
   src: PropTypes.string.isRequired,
-    alt: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-}
+};

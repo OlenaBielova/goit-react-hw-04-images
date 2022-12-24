@@ -1,45 +1,40 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from 'components/Modal';
 import { Image, GalleryItem } from './ImageGallery.styled';
 import PropTypes from 'prop-types';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    isModalOpen: false,
+export function ImageGalleryItem({ image }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+  });
+
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  componentDidUpdate() {
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
-  }
-
-  openModal = () => {
-    this.setState({ isModalOpen: true });
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
-  closeModal = () => {
-    this.setState({ isModalOpen: false });
-  };
-
-  handleKeyDown = e => {
-    if (e.keyCode === 27) {
-      this.setState({ isModalOpen: false });
-      document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+  const handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      setIsModalOpen(false);
+      document.removeEventListener('keydown', handleKeyDown);
     }
   };
 
-  render() {
-    const { webformatURL, tags, largeImageURL } = this.props.image;
-    const { isModalOpen } = this.state;
+  const { webformatURL, tags, largeImageURL } = image;
 
-    return (
-      <GalleryItem>
-        <Image onClick={this.openModal} src={webformatURL} alt={tags} />
-        {isModalOpen && (
-          <Modal onClick={this.closeModal} src={largeImageURL} alt={tags} />
-        )}
-      </GalleryItem>
-    );
-  }
+  return (
+    <GalleryItem>
+      <Image onClick={openModal} src={webformatURL} alt={tags} />
+      {isModalOpen && (
+        <Modal onClick={closeModal} src={largeImageURL} alt={tags} />
+      )}
+    </GalleryItem>
+  );
 }
 
 ImageGalleryItem.propTypes = {
